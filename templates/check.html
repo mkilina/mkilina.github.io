@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}Проверка текста на академичность{% endblock %}
+
+{% block links %}
+<link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sticky-footer-navbar/">
+<link href="../static/css/bootstrap.css" rel="stylesheet">
+<link href="../static/css/sticky-footer-navbar.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+<!-- Begin page content -->
+<main role="main" class="container">
+  <h1 class="mt-5">Проверка текста на академичность</h1>
+  <div class="check-cat" id="check2">
+    <div class="check">
+      <p> Этот инструмент позволит вам узнать, насколько ваша работа соответствует нормам академического письма
+        (научному стилю).</p>
+      <h4>Введите текст:</h4>
+
+
+      <form action="intext" method="post">
+        <input type='hidden' name='csrfmiddlewaretoken'
+          value='SbBDUCaU5jN04FNY5rStYS5SgbzSB2wElWoOrsilomS7phbXgvOMNx36J142u4am' />
+        <textarea class="form-control" rows="5" placeholder="Введите текст" name="paste_text"
+          style="margin-bottom: .8rem;"></textarea>
+        <div class="check" align="center">
+          <a class="btn btn-primary" href="{{ url_for('analysis') }}" role="button">Проверить</a>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+
+  <script id="catImage" type="text/html">
+    <img src="../static/img/cat7.jpg"/>
+</script>
+  <script id="backButton" type="text/html">
+<div class="cat">
+    <h4>Объяснение разметки:</h4>
+    <span style="background-color: DeepSkyBlue;">Повелительное наклонение</span>
+    <span style="background-color: Violet;">Сослагательное наклонение</span>
+    <span style="font-weight:bold;color: Red;">Слово неакадемического стиля</span>
+    <span style="background-color: SlateBlue;">Длинная генитивная цепочка</span>
+    <span style="background-color: #66CDAA">Ошибка в сравнительной степени</span>
+    <span style="background-color: #228B22">Неудачная сочинительная группа</span>
+    <span style="font-weight:bold;color: #8B008B;">Неудачное личное местоимение</span>
+    <div class="check">
+        <form method="post" action="check">
+            <input type='hidden' name='csrfmiddlewaretoken' value='SbBDUCaU5jN04FNY5rStYS5SgbzSB2wElWoOrsilomS7phbXgvOMNx36J142u4am' />
+            <button class="btn btn-xs btn-primary" type="submit">Вернуться к проверке</button>
+        </form>
+    </div>
+    </div>
+</script>
+</main>
+
+<footer class="footer">
+  <div class="container custom-footer">
+    <span class="text-muted">
+      <img class="cat-image" src="../static/img/cat8.jpg" />
+    </span>
+  </div>
+</footer>
+{% endblock %}

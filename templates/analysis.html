@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}Анализ текста{% endblock %}
+
+{% block links %}
+<link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sticky-footer-navbar/">
+<link href="../static/css/bootstrap.css" rel="stylesheet">
+<link href="../static/css/sticky-footer-navbar.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+  <div class="row">
+    <div class="col-lg-3 order-lg-1">
+      <h4>Общая информация</h4>
+      <table class="table table-striped">
+        <tbody>
+          <tr>
+            <th scope="row">Название</th>
+            <td>my_diploma.txt</td>
+          </tr>
+          <tr>
+            <th scope="row">Всего слов</th>
+            <td>6 000</td>
+          </tr>
+          <tr>
+            <th scope="row">Уникальных слов</th>
+            <td>3 200</td>
+          </tr>
+          <tr>
+            <th scope="row">Удобочитаемость</th>
+            <td>классная</td>
+          </tr>
+          <tr>
+            <th scope="row">Еще цифра</th>
+            <td>100500</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-lg-9 order-lg-2">
+      <h4>Анализ академичности текста</h4>
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link active" data-toggle="tab" href="#graphics">Визуализация</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#readability">Удобочитаемость</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#morph">Морфология</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Синтаксис</a>
+        </li>
+      </ul>
+
+      <div class="tab-content">
+        <div class="tab-pane active" id="graphics">
+          Графики и общие цифры
+        </div>
+        <div class="tab-pane" id="readability">
+          Удобочитаемость текста и связанные метрики
+        </div>
+        <div class="tab-pane" id="morph">
+          Морфологические ошибки
+        </div>
+      </div>
+    </div>
+    
+    </main>
+
+    <footer class="footer">
+      <div class="container custom-footer">
+        <span class="text-muted">
+          <img class="cat-image" src="../static/img/cat8.jpg" />
+        </span>
+      </div>
+    </footer>
+    {% endblock %}
