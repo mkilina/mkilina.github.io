@@ -13,7 +13,11 @@ def search():
 
 @app.route('/search_morph')
 def search_morph():
-    return render_template('search_morph.html', title='Search')
+    return render_template('search_morph.html', title='Search_morph')
+
+@app.route('/base')
+def base():
+    return render_template('base.html', title='Base')
 
 @app.route('/collocations')
 def collocations():
