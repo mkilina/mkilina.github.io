@@ -11,6 +11,10 @@ def index():
 def search():
     return render_template('search.html', title='Search')
 
+@app.route('/search_morph')
+def search_morph():
+    return render_template('search_morph.html', title='Search')
+
 @app.route('/collocations')
 def collocations():
     return render_template('collocations.html', title='Collocations')
