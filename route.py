@@ -3,6 +3,9 @@ from flask import *
 from flask_mysqldb import MySQL
 import json
 import os
+from file_manager import *
+import spelling
+import constants
 #from app import app
 from readability import countFRE
 
@@ -53,12 +56,57 @@ def base():
 def collocations():
     return render_template('collocations.html', title='Collocations')
 
-@app.route('/check')
-def academicity():
-    return render_template('check.html', title='Academicity')
+@app.route('/upload_file', methods=['GET'])
+def home():
+    return render_template('upload_and_spellcheck.html')
+
+@app.route('/upload_file', methods=['POST'])
+def upload_file():
+    file = request.files['file']
+    file_id = save_file_first_time_and_get_id(file)
+    if not is_encoding_supported(file_id):
+        return 'Сохраните файл в кодировке utf-8', 400
+    elif not are_paragraphs_correct(file_id):
+        return 'Разделите длинные абзацы на несколько', 400
+    else:
+        return jsonify({'file_id': file_id})
+
+@app.route('/get_spelling_problems/<file_id>', methods=['GET'])
+def get_spelling_data(file_id):
+    text = get_last_version(file_id)
+    spellchecker = spelling.SpellChecker()
+    problems = spellchecker.check_spelling(text)['problems']
+    return jsonify({'spelling_problems': problems})
+
+@app.route('/correct_spelling', methods=['POST'])
+def correct_spelling():
+    file_id = request.json['file_id']
+    text = get_last_version(file_id)
+    user_corrections = request.json['problems_with_corrections']
+    corrected_text = spelling.make_changes(text, user_corrections)
+    save_next_version(corrected_text, file_id)
+    return jsonify({'success':True})
+
+
+@app.route('/possible_aspects', methods=['GET'])
+def possible_aspects():
+    ##Переписать функцию, если будут аспекты, которые доступны не всегда
+    return jsonify({'possible_aspects': constants.ASPECTS})
+
+
+#@app.route('/uploads/<filename>')
+#def uploaded_file(filename):
+#    return send_from_directory(app.config['UPLOAD_FOLDER'],
+#                     filename, as_attachment=True, 
+#                     #mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document') 
+#                     mimetype = 'content-type=text/plain; charset=utf-8')
+
+
+
+
 
 @app.route('/analysis')
-def analysis():
+def analysis(file):
     filename = os.listdir("student_texts")[0]
     FRE = round(countFRE('student_texts/{0}'.format(filename)), 2)
 
