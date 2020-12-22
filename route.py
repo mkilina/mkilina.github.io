@@ -2,15 +2,17 @@
 from flask import *
 from flask_mysqldb import MySQL
 import json
+import os
 #from app import app
+from readability import countFRE
 
 app = Flask(__name__)
 mysql = MySQL(app)
 
 
 app.config['MYSQL_HOST'] = '127.0.0.1'
-app.config['MYSQL_USER'] = 'andrea'
-app.config['MYSQL_PASSWORD'] = 'rstq!2Ro'
+app.config['MYSQL_USER'] = 'user1'
+app.config['MYSQL_PASSWORD'] = 'qwerty'
 app.config['MYSQL_DB'] = 'cat'
 
 app.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -57,7 +59,14 @@ def academicity():
 
 @app.route('/analysis')
 def analysis():
-    return render_template('analysis.html', title='Analysis')
+    filename = os.listdir("student_texts")[0]
+    FRE = round(countFRE('student_texts/{0}'.format(filename)), 2)
+
+    labels = ['ECON', 'JUR', 'LING', 'PSYCH', 'HIST', 'SOC', 'YOU']
+    values = [76.6, 87.03, 82.17, 78.13, 91.11, 77.95, FRE]
+    colors = ['rgba(151,187,205,0.2)', "rgba(151,187,205,0.2)", "rgba(151,187,205,0.2)", "rgba(151,187,205,0.2)", "rgba(151,187,205,0.2)", "rgba(151,187,205,0.2)", "rgba(221,125,173,0.2)"]
+
+    return render_template('analysis.html', title='Analysis', filename=filename, FRE=FRE, max=110, labels=labels, values=values, colors=colors)
 
 @app.route('/main')
 def main():
