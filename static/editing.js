@@ -10,7 +10,7 @@ var setupTextEditing = function() {
   });
 
 
-  $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+  $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
     console.log('nav-link clicked')
     $('textarea').change()
   })
@@ -25,7 +25,7 @@ var setupTextEditing = function() {
     const text = data.text;
     console.log('get_text', data);
     $(".source_text").html(text);
-    $('.edited_text_field').text(text);
+    $('.edited_text_field').val(text);
   });
 
 
@@ -62,45 +62,60 @@ var setupTextEditing = function() {
       checkboxDiv.appendChild(checkboxLabel);
 
       checkingOptionsDiv.appendChild(checkboxDiv);
-
     });
   });
 
   $("input[name='submit_checking']").bind('click', function() {
-    let chosenNextCheckAspects = [];
-    $('input[class=nextCheckingAspectCheckbox]').each(function() {
-      if ($(this).prop('checked')) {
-        chosenNextCheckAspects.push(this.value);
-      }
-    });
-    console.log(chosenNextCheckAspects);
-    const editedText = $('.edited_text_field').value;
-    const file_id = urlParams.get('file_id');
-    //   const editedText4NextChecking = {
-    //      'file_id': file_id,
-    //     'text': editedText,
-    //     'chosen_aspects': chosenNextCheckAspects;
-    //   }
-    $.ajax({
-      type: "POST",
-      //НАПИСАТЬ РУТ ДЛЯ СОХРАНЕНИЯ
-      url: "/save_edited_text",
-      dataType: "json",
-      contentType: "application/json; charset=utf-8",
-      data: JSON.stringify({
-        'text': editedText,
-        'file_id': file_id
-      }),
-      success: function() {
-        console.log('success');
-
-
-
-        //window.location.replace(encodeURI(`/editing_form?text_id=${file_id}_spelling`));
-      }
-      //добавить случай неуспеха                   
-    })
+      const editedText = $('.edited_text_field').val();
+      const file_id = urlParams.get('file_id');
+      //   const editedText4NextChecking = {
+      //      'file_id': file_id,
+      //     'text': editedText,
+      //     'chosen_aspects': chosenNextCheckAspects;
+      //   }
+      $.ajax({
+          type: "POST",
+          //НАПИСАТЬ РУТ ДЛЯ СОХРАНЕНИЯ
+          url: "/save_edited_text",
+          dataType: "json",
+          contentType: "application/json; charset=utf-8",
+          data: JSON.stringify({
+            'text': editedText,
+            'file_id': file_id
+          }),
+          success: function() {
+            console.log('success save_edited_text');
+            let chosenNextCheckAspects = [];
+            $('input.nextCheckingAspectCheckbox').each(function() {
+              if ($(this).prop('checked')) {
+                chosenNextCheckAspects.push(this.value);
+              }
+            });
+            console.log('chosenNextCheckAspects', chosenNextCheckAspects)
+            $.ajax({
+              type: "POST",
+              url: "/aspects_checking",
+              dataType: "json",
+              contentType: "application/json; charset=utf-8",
+              data: JSON.stringify({
+                'file_id': urlParams.get('file_id'),
+                'chosen_aspects': chosenNextCheckAspects || []
+              }),
+              success: function(data) {
+                console.log('success aspects_checking');
+                const problems = data.problems;
+                const text = data.text;
+                const highlightedText = getCorrectionsHtml(text, problems, possibleAspects);
+                $(".source_text").html(highlightedText);
+                $('.edited_ text').val(text);
+              }
+              //window.location.replace(encodeURI(`/editing_form?text_id=${file_id}_spelling`));
+            });
+            //добавить случай неуспеха                   
+          }
+      });
   });
+
 }
 
 setTimeout(setupTextEditing, 0);

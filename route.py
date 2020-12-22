@@ -99,11 +99,29 @@ def send_last_version(file_id):
     return jsonify({'text': text})
 
 @app.route('/save_edited_text', methods=['POST'])
-def save_edited_text(data):
-    text = data['editedText']
+def save_edited_text():
+    data = request.get_json()
+    print('/save_edited_text request_data.file_id:')
+    print(data['file_id'])
+    text = data['text']
     file_id = data['file_id']
     save_next_version(text, file_id)
     return jsonify({'success':True})
+
+@app.route('/aspects_checking', methods=['POST']) 
+def aspects_checking():
+    data = request.get_json()
+    print('/aspects_checking request_data:')
+    print(data)
+    file_id = data['file_id'] 
+    text = get_last_version(file_id)  
+    chosen_aspects = data['chosen_aspects']
+    print(chosen_aspects)
+    problems = {}
+    for chosen_aspect in chosen_aspects:
+        checking_function = constants.ASPECT2FUNCTION[chosen_aspect]
+        problems['chosen_aspect'] = checking_function(text)
+    return jsonify({'problems':problems, 'text': text})
 
 @app.route('/analysis')
 def analysis():
