@@ -55,8 +55,8 @@ def base():
 def collocations():
     return render_template('collocations.html', title='Collocations')
 
-@app.route('/upload_file', methods=['GET'])
-def home():
+@app.route('/render_upload_file', methods=['GET'])
+def render_upload_file():
     return render_template('upload_and_spellcheck.html')
 
 @app.route('/upload_file', methods=['POST'])
@@ -92,20 +92,20 @@ def possible_aspects():
     ##Переписать функцию, если будут аспекты, которые доступны не всегда
     return jsonify({'possible_aspects': constants.ASPECTS})
 
+@app.route('/send_last_version/<file_id>', methods=['GET'])
+def send_last_version(file_id):
+    text = get_last_version(file_id)
+    return jsonify({'text': text})
 
-#@app.route('/uploads/<filename>')
-#def uploaded_file(filename):
-#    return send_from_directory(app.config['UPLOAD_FOLDER'],
-#                     filename, as_attachment=True, 
-#                     #mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document') 
-#                     mimetype = 'content-type=text/plain; charset=utf-8')
+@app.route('/save_edited_text', methods=['POST'])
+def save_edited_text(data):
+    text = data['editedText']
+    file_id = data['file_id']
+    save_next_version(text, file_id)
+    return jsonify({'success':True})
 
-
-
-
-
-@app.route('/analysis/<filename>')
-def analysis(filename):
+@app.route('/analysis')
+def analysis():
     return render_template('analysis.html', title='Analysis')
 
 @app.route('/main')

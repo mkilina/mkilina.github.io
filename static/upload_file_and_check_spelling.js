@@ -43,7 +43,7 @@ $('#docx-file').change(function() {
                             //В случае успеха идем на страницу правок
                             success: function() {
                                 console.log('success');
-                                window.location.replace(encodeURI(`/analysis/file_id=${file_id}`));
+                                window.location.replace(encodeURI(`/analysis?file_id=${file_id}`));
                             }
                         })
                         //добавить случай неуспеха
@@ -51,7 +51,7 @@ $('#docx-file').change(function() {
                     //Если ошибок не было, сразу идем
                 } else {
                     window.location.replace(
-                        encodeURI(`/analysis/file_id=${file_id}`)
+                        encodeURI(`/analysis?file_id=${file_id}`)
                     );
                 }
             })

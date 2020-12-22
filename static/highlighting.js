@@ -1,15 +1,15 @@
 function addTags(text, labels) {
     if (!labels) return text;
     const openingTags = [...labels]
-            .map(function(label){
-                return `<strong class="${label}">`;
-            })
-            .join('');
-    const closingTags =  [...labels]
-            .map(function(label){
-                return '</strong>';
-            })
-            .join('');
+        .map(function(label) {
+            return `<strong class="${label}">`;
+        })
+        .join('');
+    const closingTags = [...labels]
+        .map(function(label) {
+            return '</strong>';
+        })
+        .join('');
     return `${openingTags}${text}${closingTags}`;
 }
 
@@ -18,7 +18,7 @@ function transformProblemsIntoDictionary(problems) {
     const id2labels = {};
     const problemTypes = Object.keys(problems)
     console.debug("transformProblemsIntoDictionary@problemTypes:", problemTypes)
-    problemTypes.forEach(function(problemType){
+    problemTypes.forEach(function(problemType) {
         const similarProblems = problems[problemType]
 
         similarProblems
@@ -61,9 +61,9 @@ function areSetsEqual(set1, set2) {
     return true;
 }
 
-function highlightText(text, problems){
+function highlightText(text, problems) {
     console.debug('highlightText@text:', text);
-    console.debug('highlightText@problems:',problems)
+    console.debug('highlightText@problems:', problems)
     if (!text) {
         return '';
     }
@@ -90,17 +90,17 @@ function highlightText(text, problems){
     return htmlParts2Highlight.join('');
 }
 
-   function getCorrectionsHtml(text, corrections, possibleAspects){
-        let class2corrections = {};
-        possibleAspects.forEach(function(aspect, aspectId){
-          //Если была запрошена проверка этого аспекта
-           //Доделать: выводить сообщение, если нет ошибок
-          if (corrections[aspect] && corrections[aspect].length>0){
-              const aspectId2Show = aspectId + 1;
-              correctionClass = `aspect${aspectId2Show}`;
-              //Функция раскраски должна знать про классы, а не про содержательные индекмы
-              class2corrections[correctionClass] = corrections[aspect];
-            }
-        })
-        return  highlightText(text, class2corrections);
-      }
+var getCorrectionsHtml = function(text, corrections, possibleAspects) {
+    let class2corrections = {};
+    possibleAspects.forEach(function(aspect, aspectId) {
+        //Если была запрошена проверка этого аспекта
+        //Доделать: выводить сообщение, если нет ошибок
+        if (corrections[aspect] && corrections[aspect].length > 0) {
+            const aspectId2Show = aspectId + 1;
+            correctionClass = `aspect${aspectId2Show}`;
+            //Функция раскраски должна знать про классы, а не про содержательные индекмы
+            class2corrections[correctionClass] = corrections[aspect];
+        }
+    })
+    return highlightText(text, class2corrections);
+}
