@@ -4,8 +4,9 @@
 {% block links %}
 <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sticky-footer-navbar/">
 <link href="../static/css/bootstrap.css" rel="stylesheet">
-<link href="../static/css/sticky-footer-navbar.css" rel="stylesheet">
+<link href="../static/css/sticky-footer-navbar.css" rel="stylesheet"><<<<<<< HEAD
 <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
+<link href="{{url_for('static', filename='css/editing.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -56,7 +57,7 @@
           <a class="nav-link" data-toggle="tab" href="#readability">Удобочитаемость</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" href="#morph">Отредактировать свой текст</a>
+          <a class="nav-link" name="editing-link" data-toggle="tab" href="#editing">Отредактировать свой текст</a>
         </li>
       </ul>
 
@@ -109,20 +110,35 @@
           
         
         </div>
-        <div class="tab-pane" id="morph">
-          Морфологические ошибки
+        <div class="tab-pane" id="editing">
+          Редактирование текста
+          <div class='editing_table'>
+      
+            <div class='submit' id='submitCheckingForm'>
+              <div id='checking_options'></div>
+              <input type="button" name="submit_checking" value="Проверить выбранные аспекты новой версии текста" />
+            </div>
+
+            <div class='editing_column source_text'></div>
+            <div class='editing_column edited_text'>
+              <textarea class='edited_text_field'></textarea>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
 </main>
-<footer class="footer">
-  <div class="container custom-footer">
-    <span class="text-muted">
-      <img class="cat-image" src="../static/img/cat8.jpg" />
-    </span>
-  </div>
-</footer>
+    <footer class="footer">
+      <div class="container custom-footer">
+        <span class="text-muted">
+          <img class="cat-image" src="../static/img/cat8.jpg" />
+        </span>
+      </div>
+    </footer>
 
-{% endblock %}
+    <script type='text/javascript' src="{{url_for('static', filename='editing.js') }}"></script> 
+    <script type='text/javascript' src="{{url_for('static', filename='highlighting.js') }}"></script> 
+    {% endblock %}
+

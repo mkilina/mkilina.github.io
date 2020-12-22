@@ -26,9 +26,12 @@ def save_next_version(text, file_id):
 
 def get_last_version(file_id):
     file_name = file_id + '.txt'
+    print(file_name)
     all_saved_student_texts = os.listdir(UPLOAD_FOLDER)
     if file_name in all_saved_student_texts:
+        print('File is found')
         with open(get_txt_path(file_id), encoding='utf-8') as f:
+            print('File is open')
             text = f.read()
             return text
     else:
