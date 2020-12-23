@@ -5,18 +5,27 @@
 <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sticky-footer-navbar/">
 <link href="../static/css/bootstrap.css" rel="stylesheet">
 <link href="../static/css/sticky-footer-navbar.css" rel="stylesheet">
+<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
 {% endblock %}
 
 {% block content %}
+<main role="main" class="container">
 <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
   <div class="row">
-    <div class="col-lg-3 order-lg-1">
+    <div class="col-lg-3">
       <h4>Общая информация</h4>
+    </div>
+    <div class="col-lg-9">
+      <h4>Анализ академичности текста</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-3" style="overflow-x: auto">
       <table class="table table-striped">
         <tbody>
           <tr>
             <th scope="row">Название</th>
-            <td>my_diploma.txt</td>
+            <td>{{ filename }}</td>
           </tr>
           <tr>
             <th scope="row">Всего слов</th>
@@ -28,7 +37,7 @@
           </tr>
           <tr>
             <th scope="row">Удобочитаемость</th>
-            <td>классная</td>
+            <td>{{ FRE }}</td>
           </tr>
           <tr>
             <th scope="row">Еще цифра</th>
@@ -37,8 +46,8 @@
         </tbody>
       </table>
     </div>
-    <div class="col-lg-9 order-lg-2">
-      <h4>Анализ академичности текста</h4>
+
+    <div class="col-lg-9">
       <ul class="nav nav-tabs">
         <li class="nav-item">
           <a class="nav-link active" data-toggle="tab" href="#graphics">Визуализация</a>
@@ -53,24 +62,67 @@
 
       <div class="tab-content">
         <div class="tab-pane active" id="graphics">
-          Графики и общие цифры
-        </div>
-        <div class="tab-pane" id="readability">
-          Удобочитаемость текста и связанные метрики
+          <a class="col-lg-8 col-md-10">График удобочитаемости<br></a>
+          <canvas id="chart" class="col-xl-10 col-lg-12 col-md-12"></canvas>
+            <script>
+              var barData = {
+                labels : [
+                  {% for item in labels %}
+                  "{{ item }}",
+                  {% endfor %}],
+
+                datasets : [{
+                  fillColor: [
+                  {% for item in colors %}
+                  "{{ item }}",
+                  {% endfor %}],
+                  strokeColor: "rgba(151,187,205,1)",
+                  pointColor: "rgba(151,187,205,1)",
+                  data : [
+                    {% for item in values %}
+                      "{{ item }}",
+                      {% endfor %}
+                  ]
+                }]
+              }
+
+              // get bar chart canvas
+              var mychart = document.getElementById("chart").getContext("2d");
+
+                steps = 10
+                max = {{max}}
+
+              // draw bar chart
+              new Chart(mychart).Bar(barData, {
+                scaleOverride: true,
+                scaleSteps: steps,
+                scaleStepWidth: Math.ceil(max / steps),
+                scaleStartValue: 30,
+                scaleShowVerticalLines: true,
+                scaleShowGridLines : true,
+                barShowStroke : true,
+                scaleShowLabels: true
+                }
+              );
+
+            </script>
+          
+        
         </div>
         <div class="tab-pane" id="morph">
           Морфологические ошибки
         </div>
       </div>
     </div>
-    
-    </main>
+  </div>
+</div>
+</main>
+<footer class="footer">
+  <div class="container custom-footer">
+    <span class="text-muted">
+      <img class="cat-image" src="../static/img/cat8.jpg" />
+    </span>
+  </div>
+</footer>
 
-    <footer class="footer">
-      <div class="container custom-footer">
-        <span class="text-muted">
-          <img class="cat-image" src="../static/img/cat8.jpg" />
-        </span>
-      </div>
-    </footer>
-    {% endblock %}
+{% endblock %}
