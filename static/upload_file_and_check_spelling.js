@@ -13,23 +13,33 @@ $('#docx-file').change(function() {
                 let spelling_problems = data.spelling_problems;
                 if (Array.isArray(spelling_problems) && spelling_problems.length > 0) {
                     //Создаем радиокнопки для вариантов исправления, по умолчанию выбран вариант "не исправлять"
-                    spelling_problems.forEach(function(problem, problem_id) {
+                    spelling_problems.forEach(function(problem, problemId) {
                         var formattedText = problem.context;
                         var correctionOptions = problem.s;
-                        problemHtml = formattedText + '<br>';
-                        problemHtml += `<input type="radio" name=${problem_id} value="не исправлять" checked="checked"><label for=${problem_id}>не исправлять</label><br>`;
-                        correctionOptions.forEach(function(option) {
-                            problemHtml += `<input type="radio" name=${problem_id} value=${option}><label for=${problem_id}>${option}</label><br>`;
+                        problemHtml = `<legend>${formattedText}</legend>`;
+                        problemHtml += `
+                        <div class="mb-3 form-check-inline">
+                                <input class="form-check-input" type="radio" id="radio_${problemId}_none" name=${problemId} value="не исправлять" checked="checked">
+                                <label class="form-check-label" for="radio_${problemId}_none">не исправлять</label>
+                        </div>`;
+
+                        correctionOptions.forEach(function(option, optionIndex) {
+                            const optionId = `radio_${problemId}_${optionIndex}`
+                            problemHtml += `
+                                    <div class="mb-3 form-check-inline">
+                                        <input class="form-check-input" type="radio" id=${optionId} name=${problemId} value=${option}>
+                                        <label class="form-check-label" for=${optionId}>${option}</label>
+                                    </div>`;
                         });
                         $('.spelling_options').append(problemHtml);
                     });
                     //При нажатии на кнопку отправки орфографии собираем выбранные варианты 
                     $("input[name='submit_spelling']").bind('click', function() {
-                        spelling_problems.forEach(function(problem, problem_id) {
-                            var chosen_value = $(`input[name=${problem_id}]:checked`).val();
+                        spelling_problems.forEach(function(problem, problemId) {
+                            var chosen_value = $(`input[name=${problemId}]:checked`).val();
                             problem['chosen_value'] = chosen_value;
                         });
-                        
+
                         //И отправляем на сервер для внесения исправлений
                         $.ajax({
                             type: "POST",

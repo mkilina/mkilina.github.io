@@ -1,17 +1,34 @@
-<!doctype html>
-<html>
-  <head>
-	<link rel='shortcut icon' type='image/x-icon' href="{{url_for('static', filename='images/favicon.ico') }}" />
-    <title>Проверьте ваш академический текст</title>
-  </head>
-  <body>
 
-     <div id='upload_instruction'>
+{% extends 'base.html' %}
+{% block title %}Загрузите файл на проверку{% endblock %}
+
+{% block links %}
+
+<link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sticky-footer-navbar/">
+<link href="../static/css/bootstrap.css" rel="stylesheet">
+<link href="../static/css/sticky-footer-navbar.css" rel="stylesheet">
+<script type=text/javascript src="{{url_for('static', filename='jquery-3.5.1.min.js') }}"></script> 
+<script type=text/javascript src="{{url_for('static', filename='jquery.form.min.js') }}"></script> 
+   <!-- <iframe src="http://localhost:5000/uploads/student_text.txt" id="docx_frame" height="1000" width="1000"></iframe> -->
+<script type=text/javascript src="{{url_for('static', filename='upload_file_and_check_spelling.js') }}"></script> 
+<link rel='shortcut icon' type='image/x-icon' href="{{url_for('static', filename='images/favicon.ico') }}" />  
+{% endblock %}
+
+
+
+{% block content %}
+ <main role="main" class="container">
+   <div class="row">
+    <h4>Загрузите новый файл или что-нибудь такое</h4>
+    <div id='upload_instruction'>
+      <div>
         Загрузите txt-файл в кодировке utf-8. Длина абзацев в файле не должна превышать 100000 символов
      </div>
-     <form id="docx-form" method="post">
-		<input accept='.txt, .docx' id="docx-file" type="file" name="file">
-	</form>
+    <form id="docx-form" method="post">
+        <input accept='.txt, .docx' id="docx-file" type="file" name="file" class="form-control">
+     </form>
+    </div>
+  </div>
 
     <div class='spelling_corrections'>
         <div class='spelling_instruction'>
@@ -22,7 +39,7 @@
       
         </div>
     
-        <input type="button" name="submit_spelling" value="Внести исправления и продолжить" />
+        <input type="button" class="btn btn-outline-primary" name="submit_spelling" value="Внести исправления и продолжить" />
     </div>
 
 
@@ -33,5 +50,12 @@
 
    <!-- <iframe src="http://localhost:5000/uploads/student_text.txt" id="docx_frame" height="1000" width="1000"></iframe> -->
     <script type=text/javascript src="{{url_for('static', filename='upload_file_and_check_spelling.js') }}"></script> 	
-</body>
-</html>
+</main>
+ <footer class="footer">
+      <div class="container custom-footer">
+        <span class="text-muted">
+          <img class="cat-image" src="../static/img/cat8.jpg" />
+        </span>
+      </div>
+    </footer>
+{% endblock %}

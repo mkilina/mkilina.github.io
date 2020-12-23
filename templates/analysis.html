@@ -4,9 +4,11 @@
 {% block links %}
 <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sticky-footer-navbar/">
 <link href="../static/css/bootstrap.css" rel="stylesheet">
-<link href="../static/css/sticky-footer-navbar.css" rel="stylesheet"><<<<<<< HEAD
+<link href="../static/css/sticky-footer-navbar.css" rel="stylesheet">
 <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
 <link href="{{url_for('static', filename='css/editing.css') }}" rel="stylesheet">
+<script type='text/javascript' src="{{url_for('static', filename='editing.js') }}"></script> 
+<script type='text/javascript' src="{{url_for('static', filename='highlighting.js') }}"></script> 
 {% endblock %}
 
 {% block content %}
@@ -138,7 +140,5 @@
       </div>
     </footer>
 
-    <script type='text/javascript' src="{{url_for('static', filename='editing.js') }}"></script> 
-    <script type='text/javascript' src="{{url_for('static', filename='highlighting.js') }}"></script> 
     {% endblock %}
 
