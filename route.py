@@ -120,7 +120,8 @@ def aspects_checking():
     problems = {}
     for chosen_aspect in chosen_aspects:
         checking_function = constants.ASPECT2FUNCTION[chosen_aspect]
-        problems['chosen_aspect'] = checking_function(text)
+        problems[chosen_aspect] = checking_function(text)
+    print('problems:', problems)
     return jsonify({'problems':problems, 'text': text})
 
 @app.route('/analysis')
