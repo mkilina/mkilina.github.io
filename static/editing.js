@@ -1,3 +1,4 @@
+var possibleAspects;
 var setupTextEditing = function() {
   var urlParams = new URLSearchParams(window.location.search);
   $('.edited_text').on('change keyup keydown paste cut', 'textarea', function() {
@@ -29,7 +30,7 @@ var setupTextEditing = function() {
   });
 
 
-  var possibleAspects;
+
   $.get(`/possible_aspects`, function(data) {
     console.log(data);
     let checkingOptionsDiv = document.getElementById("checking_options");
@@ -105,7 +106,9 @@ var setupTextEditing = function() {
                 console.log('success aspects_checking');
                 const problems = data.problems;
                 const text = data.text;
-                const highlightedText = getCorrectionsHtml(text, problems, possibleAspects);
+                const possibleAspectIds = possibleAspects.map(aspect => aspect.id)
+                const highlightedText = getCorrectionsHtml(text, problems, possibleAspectIds);
+                console.log('highlightedText', highlightedText);
                 $(".source_text").html(highlightedText);
                 $('.edited_ text').val(text);
               }

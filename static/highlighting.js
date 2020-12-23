@@ -1,5 +1,4 @@
-function addTags(text, labels) {
-    if (!labels) return text;
+function addTags(text, labels) {    if (!labels) return text;
     const openingTags = [...labels]
         .map(function(label) {
             return `<strong class="${label}">`;
@@ -52,7 +51,6 @@ function transformProblemsIntoDictionary(problems) {
 }
 
 function areSetsEqual(set1, set2) {
-    console.debug('areSetsEqual', set1, set2);
     if (!set1 && !set2) return true;
     if (typeof set1 !== typeof set2) return false;
     if (set1.size !== set2.size) return false;
@@ -62,8 +60,8 @@ function areSetsEqual(set1, set2) {
 }
 
 function highlightText(text, problems) {
-    console.debug('highlightText@text:', text);
-    console.debug('highlightText@problems:', problems)
+    console.debug('highlightText@text.length:', text.length);
+    console.debug('highlightText@problems:', problems);
     if (!text) {
         return '';
     }
@@ -90,16 +88,17 @@ function highlightText(text, problems) {
     return htmlParts2Highlight.join('');
 }
 
-var getCorrectionsHtml = function(text, corrections, possibleAspects) {
+var getCorrectionsHtml = function(text, corrections, possibleAspectIds) {
+    console.log('getCorrectionsHtml', '@corrections', corrections, '@possibleAspectIds', possibleAspectIds)
     let class2corrections = {};
-    possibleAspects.forEach(function(aspect, aspectId) {
+    possibleAspectIds.forEach(function(aspectId, aspectIndex) {
         //Если была запрошена проверка этого аспекта
         //Доделать: выводить сообщение, если нет ошибок
-        if (corrections[aspect] && corrections[aspect].length > 0) {
-            const aspectId2Show = aspectId + 1;
+        if (corrections[aspectId] && corrections[aspectId].length > 0) {
+            const aspectId2Show = aspectIndex + 1;
             correctionClass = `aspect${aspectId2Show}`;
-            //Функция раскраски должна знать про классы, а не про содержательные индекмы
-            class2corrections[correctionClass] = corrections[aspect];
+            //Функция раскраски должна знать про классы, а не про содержательные индекcы
+            class2corrections[correctionClass] = corrections[aspectId];
         }
     })
     return highlightText(text, class2corrections);
