@@ -107,10 +107,12 @@ var setupTextEditing = function() {
                 const problems = data.problems;
                 const text = data.text;
                 const possibleAspectIds = possibleAspects.map(aspect => aspect.id)
+                console.time('getCorrectionsHtml');
                 const highlightedText = getCorrectionsHtml(text, problems, possibleAspectIds);
-                console.log('highlightedText', highlightedText);
+                console.timeEnd('getCorrectionsHtml');
+               // console.log('highlightedText', highlightedText);
                 $(".source_text").html(highlightedText);
-                $('.edited_ text').val(text);
+                $('.edited_text textarea').val(text);
               }
               //window.location.replace(encodeURI(`/editing_form?text_id=${file_id}_spelling`));
             });

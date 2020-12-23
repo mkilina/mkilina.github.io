@@ -1,11 +1,3 @@
-.editing_table {
-  display: flex;
-}
-
-.editing_column {
-  width: 50%;
-}
-
 .aspect1 { 
     border-bottom:1px solid red;
     display:inline-block; 
