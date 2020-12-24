@@ -62,6 +62,8 @@ def render_upload_file():
 
 @app.route('/upload_file', methods=['POST'])
 def upload_file():
+    if 'file' not in request.files:
+        return 'Файл не был отправлен', 400
     file = request.files['file']
     file_id = save_file_first_time_and_get_id(file)
     if not is_encoding_supported(file_id):
