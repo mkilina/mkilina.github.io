@@ -1,7 +1,6 @@
 import mysql.connector
 import pandas as pd
 import os
-import tempfile
 import re
 import time
 from parsing import *
@@ -177,17 +176,6 @@ def correction(text, corrected_files_directory='corrections', print_correction=F
 
     return list(mistakes_list)
 
-STUD_DIR = r'C:\Users\Andrea\Desktop\The_Cartella_2.0\uni\second_year\cat\stud_textVSscie_text\Student_texts_for_experiments\stud_txt'
-LOW_LVL = os.path.join(STUD_DIR, 'Low Level')
-REG_LVL = os.path.join(STUD_DIR, 'Regular Level')
-LOW_PRSD = os.path.join(STUD_DIR, 'conllu', 'Low_Level_Parsed')
-REG_PRSD = os.path.join(STUD_DIR, 'conllu', 'Regular_Level_Parsed')
-MA_THESES=r'C:\Users\Andrea\Desktop\stud_textVSscie_text\Student_texts_for_experiments\Fin_MA_theses_parsed'
-CORR_DIR = r'C:\Users\Andrea\Desktop\corrected_files'
-
-test_txt = os.path.join(REG_LVL, 'EC12-B1-0732.txt')
-test_conllu = os.path.join(REG_PRSD, 'prs_EC12-B1-0732.conllu') 
-test_txt = os.path.join(os.getcwd(), 'student_texts', 'f200bce2444711eba31d543530ccc142.txt')
 
 def main():
     
