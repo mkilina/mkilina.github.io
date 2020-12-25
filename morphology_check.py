@@ -53,22 +53,6 @@ class Tagset:
         return dict([('unigram', self.unigram), ('lemm', self.lemm), ('morph', self.morph), \
             ('pos', self.pos), ('start_id', self.start_id), ('end_id', self.end_id)])
 
-# TODO: combine funcitons "add_ids" and "get_words" 
-
-def add_ids(conllu_sents, text, prev_text_len=0):
-    text_copy = text
-    print(conllu_sents)
-    for sent in conllu_sents:
-        for token in sent.tokens:
-            form = token['form']
-            position = text_copy.find(form)
-            token['start_id'] = prev_text_len + position
-            token['end_id'] = prev_text_len + position + len(form)
-            text_copy = text[position+len(form):]
-            prev_text_len = prev_text_len+position+len(form)
-    for token in conllu_sents:
-        yield token
-    # return conllu_sents
 
 def parser(conllu, from_file=False):
     """
@@ -165,9 +149,6 @@ def correction(text, corrected_files_directory='corrections', print_correction=F
     conllu = make_conll_with_udpipe(text)
     # tagset creation
     words, _ = get_words(conllu)
-    # del tree   
-    
-    
     tagset = tagset_lemma(words)
     mistakes, _ = morph_error_catcher(tagset)
     mistakes_list = mistakes.values()

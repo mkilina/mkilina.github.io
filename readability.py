@@ -8,7 +8,7 @@ vowels = ["а", "я", "о", "ё", "у", "ю", "е", "э", "ы", "и", "á", "ó"
 # Readability
 
 def countASLandASW(text):
-    text = codecs.open(text, "r", "utf_8_sig").readlines()
+    text = re.split("\n", text)
     text = [line.rstrip() for line in text]
     joinedText = re.sub('́', "", " ".join(text))
     joinedText = re.sub(" -+ ", " ", " ".join(text))
@@ -31,22 +31,16 @@ def countASLandASW(text):
 
 def countFRE(text):
     ASL, ASW = countASLandASW(text)
-    
     FRE = 208.7 - 2.6 * ASL - 39.2 * ASW
-    return(FRE)
+    return(round(FRE, 2))
 
-# Frequent words rate
-
-def ipm_CAT(df):
-    df.f1 = df.f1.apply(lambda x: float((x*1000)/2494422))
-    df.f2 = df.f2.apply(lambda x: float((x*1000)/2636290))
-    df.f3 = df.f3.apply(lambda x: float((x*1000)/2691363))
-    df.f4 = df.f4.apply(lambda x: float((x*1000)/1880004))
-    df.f5 = df.f5.apply(lambda x: float((x*1000)/2808313))
-    df.f6 = df.f6.apply(lambda x: float((x*1000)/1500196))
-    return df
-
-def getFreqTable(unigramsFreq):
-    lemmas = pd.DataFrame(unigramsFreq, columns = ['lemma', 'POS', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6'])
-    lemmas = ipm_CAT(lemmas)
-    return lemmas
+def uniqueWords(text):
+    text = re.split("\n", text)
+    text = [line.rstrip() for line in text]
+    joinedText = re.sub('́', "", " ".join(text))
+    joinedText = re.sub(" -+ ", " ", " ".join(text))
+    words = re.findall('[\dáóа-яё-]+', joinedText.lower())
+    words = [word for word in words if word != "-"]
+    word_num = len(words)
+    unique_word = len(set(words))
+    return word_num, unique_word

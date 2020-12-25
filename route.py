@@ -7,7 +7,7 @@ from file_manager import *
 import spelling
 import constants
 #from app import app
-from readability import countFRE
+from readability import countFRE, uniqueWords
 
 app = Flask(__name__)
 mysql = MySQL(app)
@@ -89,11 +89,19 @@ def correct_spelling():
     save_next_version(corrected_text, file_id)
     return jsonify({'success':True})
 
-
 @app.route('/possible_aspects', methods=['GET'])
 def possible_aspects():
     ##Переписать функцию, если будут аспекты, которые доступны не всегда
     return jsonify({'possible_aspects': constants.ASPECTS})
+
+@app.route('/get_statistics/<file_id>', methods=['GET'])
+def get_statistics(file_id):
+    text = get_last_version(file_id)
+    readability_score = countFRE(text)
+    total, unique = uniqueWords(text)
+    return jsonify({'readability_score': readability_score, 
+                    'total_words': total,
+                    'unique_words': unique})
 
 @app.route('/send_last_version/<file_id>', methods=['GET'])
 def send_last_version(file_id):
@@ -128,15 +136,7 @@ def aspects_checking():
 
 @app.route('/analysis')
 def analysis():
-    filename = os.listdir("student_texts")[0]
-    FRE = round(countFRE('student_texts/{0}'.format(filename)), 2)
-
-    labels = ['ECON', 'JUR', 'LING', 'PSYCH', 'HIST', 'SOC', 'YOU']
-    values = [76.6, 87.03, 82.17, 78.13, 91.11, 77.95, FRE]
-    colors = ['rgba(151,187,205,0.2)', "rgba(151,187,205,0.2)", "rgba(151,187,205,0.2)", "rgba(151,187,205,0.2)", "rgba(151,187,205,0.2)", "rgba(151,187,205,0.2)", "rgba(221,125,173,0.2)"]
-
-    return render_template('analysis.html', title='Analysis', filename=filename, FRE=FRE, max=110, labels=labels, values=values, colors=colors)
-
+    return render_template('analysis.html', title='Analysis')
 
 @app.route('/main')
 def main():

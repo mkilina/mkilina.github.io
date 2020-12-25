@@ -7,140 +7,89 @@
 <link href="../static/css/sticky-footer-navbar.css" rel="stylesheet">
 <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
 <link href="{{url_for('static', filename='css/editing.css') }}" rel="stylesheet">
-<script type='text/javascript' src="{{url_for('static', filename='editing.js') }}"></script> 
-<script type='text/javascript' src="{{url_for('static', filename='highlighting.js') }}"></script> 
+<script type='text/javascript' src="{{url_for('static', filename='editing.js') }}"></script>
+<script type='text/javascript' src="{{url_for('static', filename='highlighting.js') }}"></script>
+<script type='text/javascript' src="{{url_for('static', filename='text_props.js') }}"></script>
+
 {% endblock %}
 
 {% block content %}
 <main role="main" class="container">
-<div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
-  <div class="row">
-    <div class="col-lg-3">
-      <h4>Общая информация</h4>
-    </div>
-    <div class="col-lg-9">
-      <h4>Анализ академичности текста</h4>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-lg-3" style="overflow-x: auto">
-      <table class="table table-striped">
-        <tbody>
-          <tr>
-            <th scope="row">Название</th>
-            <td>{{ filename }}</td>
-          </tr>
-          <tr>
-            <th scope="row">Всего слов</th>
-            <td>6 000</td>
-          </tr>
-          <tr>
-            <th scope="row">Уникальных слов</th>
-            <td>3 200</td>
-          </tr>
-          <tr>
-            <th scope="row">Удобочитаемость</th>
-            <td>{{ FRE }}</td>
-          </tr>
-          <tr>
-            <th scope="row">Еще цифра</th>
-            <td>100500</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+    <h4>Анализ академичности текста</h4>
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#rdb">Удобочитаемость</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" name="editing-link" data-toggle="tab" href="#editing">Отредактировать свой текст</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#graphics">Общая информация</a>
+      </li>
+    </ul>
 
-    <div class="col-lg-9">
-      <ul class="nav nav-tabs">
-        <li class="nav-item">
-          <a class="nav-link active" data-toggle="tab" href="#graphics">Визуализация</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" href="#readability">Удобочитаемость</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" name="editing-link" data-toggle="tab" href="#editing">Отредактировать свой текст</a>
-        </li>
-      </ul>
+    <div class="tab-content">
+      <div class="tab-pane" id="graphics">
+        <table class="table table-striped">
+          <tbody>
+            <tr>
+              <th scope="row">Название</th>
+              <td id='filename'></td>
+            </tr>
+            <tr>
+              <th scope="row">Всего слов</th>
+              <td id='totalWords'></td>
+            </tr>
+            <tr>
+              <th scope="row">Уникальных слов</th>
+              <td id='uniqueWords'></td>
+            </tr>
+            <tr>
+              <th scope="row">Удобочитаемость</th>
+              <td id='FRE'></td>
+            </tr>
+            <tr>
+              <th scope="row">Еще цифра</th>
+              <td>100500</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-      <div class="tab-content">
+      <div class="tab-pane active" id="rdb">
+        <a class="col-lg-8 col-md-10">График удобочитаемости<br></a>
+        <canvas id="chart" class="col-xl-10 col-lg-12 col-md-12"></canvas>
+      </div>
 
-        <div class="tab-pane active" id="graphics">
-          <a class="col-lg-8 col-md-10">График удобочитаемости<br></a>
-          <canvas id="chart" class="col-xl-10 col-lg-12 col-md-12"></canvas>
-            <script>
-              var barData = {
-                labels : [
-                  {% for item in labels %}
-                  "{{ item }}",
-                  {% endfor %}],
+      <div class="tab-pane" id="editing">
+        Редактирование текста
+        <div class="container">
 
-                datasets : [{
-                  fillColor: [
-                  {% for item in colors %}
-                  "{{ item }}",
-                  {% endfor %}],
-                  strokeColor: "rgba(151,187,205,1)",
-                  pointColor: "rgba(151,187,205,1)",
-                  data : [
-                    {% for item in values %}
-                      "{{ item }}",
-                      {% endfor %}
-                  ]
-                }]
-              }
-
-              // get bar chart canvas
-              var mychart = document.getElementById("chart").getContext("2d");
-
-                steps = 10
-                max = {{max}}
-
-              // draw bar chart
-              new Chart(mychart).Bar(barData, {
-                scaleOverride: true,
-                scaleSteps: steps,
-                scaleStepWidth: Math.ceil(max / steps),
-                scaleStartValue: 30,
-                scaleShowVerticalLines: true,
-                scaleShowGridLines : true,
-                barShowStroke : true,
-                scaleShowLabels: true
-                }
-              );
-
-            </script> 
-        </div>
-
-        <div class="tab-pane" id="editing">
-          Редактирование текста
-          <div class="container">
-
-            <div class="row">
-              <div class="col">
-                <div class='submit' id='submitCheckingForm'>
-                  <div id='checking_options'></div>
-                  <input type="button" class="btn btn-outline-primary" name="submit_checking" value="Проверить выбранные аспекты новой версии текста" />
-                </div>
+          <div class="row">
+            <div class="col">
+              <div class='submit' id='submitCheckingForm'>
+                <div id='checking_options'></div>
+                <input type="button" class="btn btn-outline-primary" name="submit_checking"
+                  value="Проверить выбранные аспекты новой версии текста" />
               </div>
             </div>
+          </div>
 
-            <div class="row mt-3">
-              <div class="col">
-                <div class='source_text'></div>
-              </div>
-              <div class="col">
-                <div class='edited_text'>
-                  <textarea class='form-control edited_text_field'></textarea>
-                </div>
+          <div class="row mt-3">
+            <div class="col">
+              <div class='source_text'></div>
+            </div>
+            <div class="col">
+              <div class='edited_text'>
+                <textarea class='form-control edited_text_field'></textarea>
               </div>
             </div>
           </div>
         </div>
-
       </div>
+    </div>
   </div>
-</div>
 </main>
 
 <footer class="footer">
@@ -151,4 +100,3 @@
   </div>
 </footer>
 {% endblock %}
-
