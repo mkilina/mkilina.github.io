@@ -29,7 +29,7 @@
         <li>Относительная частота</li>
       </ul>
     </div>
-    <form class="my-2 my-lg-0" action="search_collocations" method="post">
+    <form class="my-2 my-lg-0" action="collocations" method="post">
       <div class="form-row">
         <div class="form-inline search-field">
           <input type="hidden" name="csrfmiddlewaretoken"
@@ -41,10 +41,20 @@
             <select class="form-control" name="search-domain">
               <option>Лингвистика</option>
               <option>Социология</option>
-              <option>Политология</option>
+              <option>История</option>
               <option>Юриспруденция</option>
               <option>Психология и педагогика</option>
               <option>Экономика</option>
+              <option>Весь корпус</option>
+            </select>
+          </div>
+
+          <div class="domain">
+            <select class="form-control" name="search-metric">
+              <option>PMI</option>
+              <option>t_score</option>
+              <option>logdice</option>
+              <option>corpus_frequency</option>
             </select>
           </div>
 

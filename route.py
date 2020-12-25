@@ -14,8 +14,8 @@ mysql = MySQL(app)
 
 
 app.config['MYSQL_HOST'] = '127.0.0.1'
-app.config['MYSQL_USER'] = 'user1'
-app.config['MYSQL_PASSWORD'] = 'qwerty'
+app.config['MYSQL_USER'] = 'andr'
+app.config['MYSQL_PASSWORD'] = 'rstq!2Ro'
 app.config['MYSQL_DB'] = 'cat'
 
 app.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -25,23 +25,29 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 def index():
     return render_template('index.html', title='Home')
 
-@app.route('/search',  methods=['GET', 'POST'])
+@app.route('/search', methods=['GET', 'POST'])
 def search():
     if request.method == "GET":
         return render_template('search.html', title='Search')
 
     else:
         details = request.form
+        print(details)
         search_token = details['search']
-        print(search_token)
+        
+        frequency = 'freq_all'
+
         cur = mysql.connection.cursor()
-        cur.execute(f'''SELECT "freq_all", freq_all, "freq1", freq1 
-        from unigrams WHERE unigram = "{search_token}";''')
+        cur.execute(f'''SELECT unigrams.{frequency} as frequency, lemmas.lemma as lemma
+        FROM unigrams 
+        JOIN lemmas ON unigrams.lemma = lemmas.id_lemmas
+        WHERE unigrams.unigram = "{search_token}";''')
         row_headers = [x[0] for x in cur.description]
         rv = cur.fetchall()
         json_data = []
         for result in rv:
             json_data.append(dict(zip(row_headers, result)))
+
         return render_template('db_response.html', response=json.dumps(json_data), token=search_token)
 
 @app.route('/search_morph')
@@ -52,9 +58,74 @@ def search_morph():
 def base():
     return render_template('base.html', title='Base')
 
-@app.route('/collocations')
+@app.route('/collocations', methods=['GET', 'POST'])
 def collocations():
-    return render_template('collocations.html', title='Collocations')
+    if request.method == "GET":
+        return render_template('collocations.html', title='Collocations')
+
+    else:
+        details = request.form
+        print(details)
+        search_token = details['search_collocations']
+        search_metric = details['search-metric'].lower()
+        search_domain = details['search-domain']
+
+        if search_domain == 'Лингвистика':
+            domain_token = '3'
+        elif search_domain == 'Социология':
+            domain_token = '6'
+        elif search_domain == 'История':
+            domain_token = '5'
+        elif search_domain == 'Юриспруденция':
+            domain_token = '2'
+        elif search_domain == 'Психология и педагогика':
+            domain_token = '4'
+        elif search_domain == 'Экономика':
+            domain_token = '1'
+        else:
+            domain_token = None
+        
+        if domain_token:
+            frequency = f'd{domain_token}_freq'
+            pmi = f'd{domain_token}_pmi'
+            tscore = f'd{domain_token}_tsc'
+            logdice = f'd{domain_token}_logdice'
+
+        else: 
+            frequency = 'raw_frequency'
+            pmi = 'pmi'
+            tscore = 'tscore'
+            logdice = 'logdice'
+        
+    
+        cur = mysql.connection.cursor()
+        cur.execute(f'''SELECT tab2.unigram_token as entered_search, 
+        tab1.unigram as collocate,
+        frequency,
+        pmi,
+        t_score,
+        logdice
+        FROM unigrams as tab1
+        JOIN
+        (SELECT 
+        unigrams.unigram as unigram_token, 
+        2grams.wordform_2 as collocate_id, 
+        2grams.{frequency} as frequency,
+        2grams.{pmi} as pmi,
+        2grams.{tscore} as t_score,
+        2grams.{logdice} as logdice
+        FROM unigrams
+        JOIN 2grams ON unigrams.id_unigram = 2grams.wordform_1 
+        WHERE unigrams.unigram = "{search_token}") as tab2
+        ON tab2.collocate_id = tab1.id_unigram
+        ORDER BY {search_metric} DESC
+        LIMIT 20;''')
+        row_headers = [x[0] for x in cur.description]
+        rv = cur.fetchall()
+        json_data = []
+        for result in rv:
+            json_data.append(dict(zip(row_headers, result)))
+        return render_template('db_response.html', response=json.dumps(json_data), token=search_token)
 
 @app.route('/render_upload_file', methods=['GET'])
 def render_upload_file():
