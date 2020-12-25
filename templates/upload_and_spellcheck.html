@@ -14,9 +14,16 @@
 
 
 {% block content %}
-<main role="main" class="container">
-  <div class="row">
-    <h4>Загрузите новый файл или что-нибудь такое</h4>
+
+ <main role="main" class="container">
+   <div class="row">
+    <h4>Загрузите новый файл</h4>
+    <div id='upload_instruction'>
+        Загрузите txt-файл в кодировке utf-8. Длина абзацев в файле не должна превышать 100000 символов
+    </div>
+    <form id="docx-form" method="post">
+      <input accept='.txt' id="docx-file" type="file" name="file" class="form-control">
+    </form>
   </div>
 
   <form id="docx-form" method="post">
