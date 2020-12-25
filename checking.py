@@ -12,10 +12,6 @@ def morphology_checker(text):
     else:
         print("Wrong datatype")
 
-def dummy_morphology_checker(text):
-    return [{'bos':5, 'end':15}, {'bos':20, 'end':30},]
->>>>>>> 2c88bbd1a497e177727a8863f309e8ab547c47ea
-
 def result_normalizer(table):
   a = []
   for round in table:
