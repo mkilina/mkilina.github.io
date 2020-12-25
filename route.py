@@ -8,6 +8,7 @@ import spelling
 import constants
 #from app import app
 from readability import countFRE, uniqueWords
+
 from sqlalchemy.sql.schema import BLANK_SCHEMA
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -42,10 +43,12 @@ def load_user(user_id):
 app.config['SECRET_KEY'] = 'dmvndshjvbsdvjhvjvgfuy'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 app.config['MYSQL_HOST'] = '127.0.0.1'
 app.config['MYSQL_USER'] = 'user1'
 app.config['MYSQL_PASSWORD'] = 'qwerty'
 app.config['MYSQL_DB'] = 'cat'
+
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 
@@ -129,7 +132,7 @@ class userUploadForm(squlitedb.Model):
 
     def __repr__(self):
         return 'Posted By' + str(self.author)
-
+    
 
 @app.route('/register', methods=['GET','POST'])
 def register():
