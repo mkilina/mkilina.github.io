@@ -29,10 +29,10 @@ def countASLandASW(text):
     ASW = syll_num/word_num #average num of syllables per word
     return (ASL, ASW)
 
-def countFRE(text):
-    ASL, ASW = countASLandASW(text)
-    FRE = 208.7 - 2.6 * ASL - 39.2 * ASW
-    return(round(FRE, 2))
+def countFKG(text):
+    ASL, ASW = countASLandASW(text)     
+    FKG = 0.36 * ASL + 5.76 * ASW - 11.97
+    return(FKG)
 
 def uniqueWords(text):
     text = re.split("\n", text)
@@ -44,3 +44,19 @@ def uniqueWords(text):
     word_num = len(words)
     unique_word = len(set(words))
     return word_num, unique_word
+
+def CEFR(FKG):
+    if FKG >= 5.155:
+        level = 'C2'
+    elif FKG >= 4.57:
+        level = 'C1'
+    elif FKG >= 2.63:
+        level = 'B2'
+    elif FKG >= 2.31:
+        level = 'B1'
+    elif FKG >= 1.14:
+        level = 'A2'
+    elif FKG >= -0.48:
+        level = 'A1'
+    else: level = 'ваш уровень слишком низок'
+    return level    
