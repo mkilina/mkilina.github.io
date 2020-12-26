@@ -7,7 +7,7 @@ from file_manager import *
 import spelling
 import constants
 #from app import app
-from readability import countFRE, uniqueWords
+from readability import countFKG, uniqueWords, CEFR
 
 from sqlalchemy.sql.schema import BLANK_SCHEMA
 from flask_sqlalchemy import SQLAlchemy
@@ -411,11 +411,13 @@ def possible_aspects():
 @app.route('/get_statistics/<file_id>', methods=['GET'])
 def get_statistics(file_id):
     text = get_last_version(file_id)
-    readability_score = countFRE(text)
+    readability_score = countFKG(text)
     total, unique = uniqueWords(text)
+    cefr = CEFR(readability_score)
     return jsonify({'readability_score': readability_score, 
                     'total_words': total,
-                    'unique_words': unique})
+                    'unique_words': unique,
+                    'CEFR': cefr})
 
 @app.route('/send_last_version/<file_id>', methods=['GET'])
 def send_last_version(file_id):
