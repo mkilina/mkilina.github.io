@@ -6,8 +6,9 @@ import os
 from file_manager import *
 import spelling
 import constants
+import secrets 
 #from app import app
-from readability import countFKG, uniqueWords, CEFR
+from readability import countFKG, uniqueWords
 
 from sqlalchemy.sql.schema import BLANK_SCHEMA
 from flask_sqlalchemy import SQLAlchemy
@@ -45,8 +46,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 app.config['MYSQL_HOST'] = '127.0.0.1'
-app.config['MYSQL_USER'] = 'user'
-app.config['MYSQL_PASSWORD'] = 'password'
+app.config['MYSQL_USER'] = 'andr'
+app.config['MYSQL_PASSWORD'] = 'rstq!2Ro'
 app.config['MYSQL_DB'] = 'cat'
 
 app.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -270,28 +271,34 @@ def index():
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
+    
     if request.method == "GET":
-        return render_template('search.html', title='Search')
+        tk = secrets.token_urlsafe()
+        session['csrftoken'] = str(tk)
+        session_csrftoken = session['csrftoken']
+        return render_template('search.html', title='Search', random_token=session_csrftoken)
 
     else:
         details = request.form
-        print(details)
         search_token = details['search']
-        
-        frequency = 'freq_all'
+        csrftoken = details['csrfmiddlewaretoken']
+        print('1', session['csrftoken'])
+        print('2', csrftoken)
+        if csrftoken == session.get('csrftoken', None):
+            frequency = 'freq_all'
 
-        cur = mysql.connection.cursor()
-        cur.execute(f'''SELECT unigrams.{frequency} as frequency, lemmas.lemma as lemma
-        FROM unigrams 
-        JOIN lemmas ON unigrams.lemma = lemmas.id_lemmas
-        WHERE unigrams.unigram = "{search_token}";''')
-        row_headers = [x[0] for x in cur.description]
-        rv = cur.fetchall()
-        json_data = []
-        for result in rv:
-            json_data.append(dict(zip(row_headers, result)))
+            cur = mysql.connection.cursor()
+            cur.execute(f'''SELECT unigrams.{frequency} as frequency, lemmas.lemma as lemma
+            FROM unigrams 
+            JOIN lemmas ON unigrams.lemma = lemmas.id_lemmas
+            WHERE unigrams.unigram = "{search_token}";''')
+            row_headers = [x[0] for x in cur.description]
+            rv = cur.fetchall()
+            json_data = []
+            for result in rv:
+                json_data.append(dict(zip(row_headers, result)))
 
-        return render_template('db_response.html', response=json.dumps(json_data), token=search_token)
+            return render_template('db_response.html', response=json.dumps(json_data), token=search_token)
 
 @app.route('/search_morph')
 def search_morph():
@@ -413,11 +420,9 @@ def get_statistics(file_id):
     text = get_last_version(file_id)
     readability_score = countFKG(text)
     total, unique = uniqueWords(text)
-    cefr = CEFR(readability_score)
     return jsonify({'readability_score': readability_score, 
                     'total_words': total,
-                    'unique_words': unique,
-                    'CEFR': cefr})
+                    'unique_words': unique})
 
 @app.route('/send_last_version/<file_id>', methods=['GET'])
 def send_last_version(file_id):
